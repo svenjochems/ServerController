@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <PreferenceCategory android:title="@string/pref_header_connection">
+        <EditTextPreference
+            android:key="@string/pref_key_username"
+            android:title="@string/pref_title_username"
+            android:defaultValue=""
+            android:selectAllOnFocus="true"
+            android:inputType="text"
+            android:capitalize="none"
+            android:singleLine="true"
+            android:maxLines="1" />
+        <EditTextPreference
+            android:key="@string/pref_key_password"
+            android:title="@string/pref_title_password"
+            android:defaultValue=""
+            android:selectAllOnFocus="true"
+            android:inputType="textPassword"
+            android:capitalize="none"
+            android:singleLine="true"
+            android:maxLines="1" />
+        <EditTextPreference
+            android:key="@string/pref_key_ip"
+            android:title="@string/pref_title_ip"
+            android:defaultValue=""
+            android:selectAllOnFocus="true"
+            android:inputType="phone"
+            android:capitalize="none"
+            android:singleLine="true"
+            android:maxLines="1" />
+        <EditTextPreference
+            android:key="@string/pref_key_port"
+            android:title="@string/pref_title_port"
+            android:defaultValue=""
+            android:selectAllOnFocus="true"
+            android:inputType="numberDecimal"
+            android:capitalize="none"
+            android:singleLine="true"
+            android:maxLines="1" />
+        <!--<CheckBoxPreference
+            android:key="autologon"
+            android:title="@string/pref_title_social_recommendations"
+            android:summary="@string/pref_description_social_recommendations"
+            android:defaultValue="true" />-->
+    </PreferenceCategory>
+</PreferenceScreen>

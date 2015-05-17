@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ServerController</string>
+    <string name="title_section1">Radio</string>
+    <string name="title_section2">Server Informatie</string>
+    <string name="title_section3">Munin</string>
+    <string name="title_section4">Camera</string>
+    <string name="title_section5">Zonnepanelen</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="action_exit">Afsluiten</string>
+    <string name="button_alarm">Alarm</string>
+    <string name="networkErrorOk">OK</string>
+    <string name="networkErrorTitle">Verbinding Mislukt</string>
+    <string name="networkErrorMessage">Er kan geen verbinding gemaakt worden met de server.\nControleer of u verbonden bent met het lokaal netwerk!!</string>
+    <string name="loggedOnSuccess">Successvol aangemeld bij de server</string>
+    <string name="playError">Er is iets misgelopen…</string>
+    <string name="processDialog">Aanmelden…</string>
+    <string name="processDialogTitle">Aanmelden bij Server</string>
+    <string name="URLDialogTitle">URL</string>
+    <string name="positiveResponse">Ok</string>
+    <string name="negativeResponse">Annuleren</string>
+    <string-array name="radioStations">
+        <item>MNM</item>
+        <item>MNM Hits</item>
+        <item>Nostalgie</item>
+        <item>Radio 1</item>
+        <item>Radio 2</item>
+        <item>Sky Radio</item>
+        <item>Q-Music</item>
+        <item>Joe fm</item>
+        <item>Studio Brussel</item>
+        <item>Klara</item>
+        <item>Valencia</item>
+        <item>CD</item>
+        <item>URL</item>
+        <item>Afspelen/Pauzeren</item>
+    </string-array>
+    <string-array name="radioUrl">
+        <item>MNM</item>
+        <item>MNMHits</item>
+        <item>Nostalgie</item>
+        <item>Radio1</item>
+        <item>Radio2</item>
+        <item>Sky</item>
+        <item>QMusic</item>
+        <item>Joe</item>
+        <item>StuBru</item>
+        <item>Klara</item>
+        <item>Valencia</item>
+        <item>CD</item>
+        <item>URL</item>
+        <item>PlayPause</item>
+    </string-array>
+
+    <string name="btnSolarOld">Oud</string>
+    <string name="btnSolarNew">Nieuw</string>
+</resources>

@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '20.0.0'
+    defaultConfig {
+        applicationId 'be.jochems.sven.servercontroller'
+        minSdkVersion 16
+        targetSdkVersion 20
+        versionName '1.2.1'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+
+    //compile 'com.jcraft:jsch:0.1.51'
+    compile files('libs/jsch-0.1.44.jar')
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile 'com.android.support:support-v4:20.+'
+    // You must install or update the Google Repository through the SDK manager to use this dependency.
+    compile 'com.google.android.gms:play-services:4.2.42'
+    compile 'com.android.support:appcompat-v7:20.+'
+}

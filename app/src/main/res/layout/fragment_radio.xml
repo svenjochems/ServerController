@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="left|top"
+    style="@style/AppTheme"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:text="Status"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:id="@+id/txtStatus"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/border"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="322dp"
+        android:id="@+id/lstRadio"
+        android:layout_weight="10"
+        android:choiceMode="singleChoice" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_alarm"
+        android:id="@+id/btnAlarm"
+        android:enabled="true"
+        android:layout_weight="3" />
+
+</LinearLayout>
