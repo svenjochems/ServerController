@@ -120,7 +120,7 @@ public class InformationFragment extends Fragment{
 
             } catch (Exception e){
                 Log.d("jsch", "error" + e.getMessage());
-                return ""+R.string.playError;
+                return getString(R.string.playError);
             }
         }
 

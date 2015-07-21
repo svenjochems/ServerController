@@ -8,7 +8,7 @@
     <string name="title_section4">Camera</string>
     <string name="title_section5">Zonnepanelen</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_close">Sluit navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Instellingen</string>
     <string name="action_exit">Afsluiten</string>
@@ -17,7 +17,7 @@
     <string name="networkErrorTitle">Verbinding Mislukt</string>
     <string name="networkErrorMessage">Er kan geen verbinding gemaakt worden met de server.\nControleer of u verbonden bent met het lokaal netwerk!!</string>
     <string name="loggedOnSuccess">Successvol aangemeld bij de server</string>
-    <string name="playError">Er is iets misgelopen…</string>
+    <string name="playError">Probleem met communicatie!</string>
     <string name="processDialog">Aanmelden…</string>
     <string name="processDialogTitle">Aanmelden bij Server</string>
     <string name="URLDialogTitle">URL</string>
@@ -58,4 +58,5 @@
 
     <string name="btnSolarOld">Oud</string>
     <string name="btnSolarNew">Nieuw</string>
+    <string name="error_incorrect_ip">Kan de server niet bereiken, controleer IP adres and poortnummer</string>
 </resources>

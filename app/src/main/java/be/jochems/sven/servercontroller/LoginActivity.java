@@ -25,7 +25,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
@@ -264,7 +266,7 @@ public class LoginActivity extends Activity{
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
 
         private final String mUser;
         private final String mPassword;
@@ -291,7 +293,7 @@ public class LoginActivity extends Activity{
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
             try {
                 Log.d("Logging in", mUser + ", " + mIP + ", " + mPort);
 
@@ -306,22 +308,28 @@ public class LoginActivity extends Activity{
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String str = in.readLine();
-                Log.d("output",str);
-                return str.equals("OK");
+                Log.d("output", str);
+                return str.equals("OK") ? 0 : 1;
 
-            } catch (Exception e){
-                Log.d("Login","error: " + e.getMessage());
-                return false;
+            } catch (ConnectException e){
+                Log.d("Login","error: Network Unreacheable");
+                return 1;
+            }catch (FileNotFoundException e){
+                Log.d("Login","error: Credentials");
+                return 2;
+            }catch (Exception e){
+                Log.d("Login", "error: Other");
+                return 3;
             }
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Integer result) {
             mAuthTask = null;
             showProgress(false);
 
-            Log.d("postExecute",""+success);
-            application.setLoggedOn(success);
+            Log.d("postExecute, return: ",""+result);
+            application.setLoggedOn(result==0);
 
             dialog.dismiss();
             if (application.isLoggedOn()) {
@@ -336,11 +344,21 @@ public class LoginActivity extends Activity{
                 startActivity(main);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-                //Toast.makeText(MainActivity.this, R.string.loggedOnSuccess, Toast.LENGTH_SHORT).show();
-                //RadioFragment fragment = (RadioFragment) getFragmentManager().findFragmentById(R.id.radio_fragment);
-                //fragment.checkLogon();
+                switch (result){
+                    case 1:     //Network Error
+                        mIPView.setError(getString(R.string.error_incorrect_ip));
+                        mIPView.requestFocus();
+                        break;
+                    case 2:     //Credential Error
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                        break;
+                    case 3:     //Other Error
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                        break;
+                }
+
             }
         }
 

@@ -13,6 +13,7 @@
     <string name="error_invalid_password">This password is invalid</string>
     <string name="error_invalid_ip">This IP Address is invalid</string>
     <string name="error_invalid_port">This Port is invalid</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_password">This password or username is incorrect</string>
+    <string name="error_incorrect_ip">Unable to reach the server, check IP address and port number</string>
     <string name="error_field_required">This field is required</string>
 </resources>

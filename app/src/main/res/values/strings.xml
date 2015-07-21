@@ -17,7 +17,7 @@
     <string name="networkErrorTitle">Connection Failed</string>
     <string name="networkErrorMessage">Connection to the server failed\nControle your connection with the network!!</string>
     <string name="loggedOnSuccess">Logon success</string>
-    <string name="playError">Something went wrong…</string>
+    <string name="playError">Communication error!</string>
     <string name="processDialog">Please wait…</string>
     <string name="processDialogTitle">Login</string>
     <string name="URLDialogTitle">URL</string>
