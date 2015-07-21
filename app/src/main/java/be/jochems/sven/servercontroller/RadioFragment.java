@@ -3,10 +3,11 @@ package be.jochems.sven.servercontroller;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.service.textservice.SpellCheckerService;
+import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +20,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by Sven on 9/07/2014.
@@ -36,15 +34,17 @@ public class RadioFragment extends Fragment {
     private String[] radioUrl;
     private String[] stations;
     private ArrayAdapter<String> arrayAdapter;
+    private SharedPreferences sp;
+    private String mUser;
+    private String mPassword;
+    private String mPort;
+    private String mIP;
     ServerController application;
 
     //Views
     private Button alarmButton;
     private ListView radioListView;
     private TextView statusText;
-
-    //Connection with server
-    private Session session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class RadioFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(), "alarm initiated", Toast.LENGTH_SHORT).show();
-                new Play().execute("/home/sven/scripts/play Alarm");
+                new Play().execute("Alarm");
                 //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 //String username = sp.getString(getString(R.string.pref_key_username),null);
                 //Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
@@ -88,7 +88,7 @@ public class RadioFragment extends Fragment {
                             alert.setPositiveButton(R.string.positiveResponse, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     String url = input.getText().toString();
-                                    new Play().execute("/home/sven/scripts/play " + url);
+                                    new Play().execute(url);
                                 }
                             });
                             alert.setNegativeButton(R.string.negativeResponse, new DialogInterface.OnClickListener() {
@@ -97,21 +97,26 @@ public class RadioFragment extends Fragment {
                             });
                             alert.show();
                 }else{
-                    Log.d("Station", "call command: /home/sven/scripts/play " + radioUrl[i]);
-                    new Play().execute("/home/sven/scripts/play " + radioUrl[i]);
+                    Log.d("Station", "call command: " + radioUrl[i]);
+                    new Play().execute(radioUrl[i]);
                 }
 
             }
         });
 
-        new Play().execute("/home/sven/scripts/play Print");
+        new Play().execute("Print");
 
         return view;
     }
 
     public void checkLogon(){
         if (application.isLoggedOn()){
-            session = application.getSession();
+            sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            mUser = sp.getString(getString(R.string.pref_key_username),"");
+            mPassword = sp.getString(getString(R.string.pref_key_password),"");
+            mIP = sp.getString(getString(R.string.pref_key_ip),"");
+            mPort = sp.getString(getString(R.string.pref_key_port), "0");
+
             alarmButton.setEnabled(true);
             radioListView.setEnabled(true);
         } else {
@@ -124,23 +129,20 @@ public class RadioFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                // SSH Channel
-                ChannelExec channelssh = (ChannelExec)session.openChannel("exec");
-                InputStream inputStream = channelssh.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
+                URL url = new URL("http://" + mIP + ":" + mPort + "/scripts/Radio.sh?param=" + params[0]);
 
-                // Execute command
-                channelssh.setCommand(params[0]);
-                channelssh.connect();
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                    stringBuilder.append('\n');
-                }
-                channelssh.disconnect();
+                String authString = mUser + ":" + mPassword;
+                final String authStringEnc = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
 
-                return stringBuilder.toString();
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("Authorization", "Basic " + authStringEnc);
+                conn.connect();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String str = in.readLine();
+                Log.d("output",str);
+                return str;
+
             } catch (Exception e){
                 Log.d("jsch","error" + e.getMessage());
                 return ""+R.string.playError;

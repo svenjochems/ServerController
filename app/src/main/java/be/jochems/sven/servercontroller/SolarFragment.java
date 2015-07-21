@@ -1,9 +1,12 @@
 package be.jochems.sven.servercontroller;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +15,10 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.Session;
-
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Created by Sven on 18/4/2015.
@@ -26,15 +27,17 @@ public class SolarFragment extends Fragment {
 
     //Variables
     ServerController application;
+    private SharedPreferences sp;
+    private String mUser;
+    private String mPassword;
+    private String mPort;
+    private String mIP;
 
     //Views
     private Button oldSolarButton;
     private Button newSolarButton;
     private TextView solarDataText;
     private RelativeLayout relLaProgress;
-
-    //Connection with server
-    private Session session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +73,12 @@ public class SolarFragment extends Fragment {
 
     public void checkLogon(){
         if (application.isLoggedOn()){
-            session = application.getSession();
+            sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            mUser = sp.getString(getString(R.string.pref_key_username),"");
+            mPassword = sp.getString(getString(R.string.pref_key_password),"");
+            mIP = sp.getString(getString(R.string.pref_key_ip),"");
+            mPort = sp.getString(getString(R.string.pref_key_port), "0");
+
             solarDataText.setEnabled(true);
             oldSolarButton.setEnabled(true);
             newSolarButton.setEnabled(true);
@@ -84,10 +92,10 @@ public class SolarFragment extends Fragment {
     public void getData(int ID){
         switch (ID){
             case 0:
-                new GetSolarData().execute("/home/sven/scripts/currentSolarData.sh oud");
+                new GetSolarData().execute("oud");
                 break;
             case 1:
-                new GetSolarData().execute("/home/sven/scripts/currentSolarData.sh nieuw");
+                new GetSolarData().execute("nieuw");
                 break;
         }
 
@@ -105,23 +113,25 @@ public class SolarFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                // SSH Channel
-                ChannelExec channelssh = (ChannelExec)session.openChannel("exec");
-                InputStream inputStream = channelssh.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder stringBuilder = new StringBuilder();
+                URL url = new URL("http://" + mIP + ":" + mPort + "/scripts/Solar.sh?param=" + params[0]);
+
+                String authString = mUser + ":" + mPassword;
+                final String authStringEnc = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
+
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("Authorization", "Basic " + authStringEnc);
+                conn.connect();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String line;
+                String output = "";
 
-                // Execute command
-                channelssh.setCommand(params[0]);
-                channelssh.connect();
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                    stringBuilder.append('\n');
+                while( ( line = in.readLine()) != null){
+                    output += (line + '\n');
                 }
-                channelssh.disconnect();
+                Log.d("output", output);
+                return output;
 
-                return stringBuilder.toString();
             } catch (Exception e){
                 Log.d("jsch", "error" + e.getMessage());
                 return ""+R.string.playError;

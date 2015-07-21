@@ -4,38 +4,30 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,10 +36,6 @@ import java.util.regex.Pattern;
 
  */
 public class LoginActivity extends Activity{
-
-    //Connection with server
-    private JSch jsch;
-    private Session session;
 
     private SharedPreferences sp;
     ServerController application;
@@ -305,28 +293,24 @@ public class LoginActivity extends Activity{
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                jsch = new JSch();
-                //String username = sp.getString(getString(R.string.pref_key_username), null);
-                //String password = sp.getString(getString(R.string.pref_key_password), null);
-                //String ip = sp.getString(getString(R.string.pref_key_ip), null);
-                //int port = Integer.parseInt(sp.getString(getString(R.string.pref_key_port), null));
-
                 Log.d("Logging in", mUser + ", " + mIP + ", " + mPort);
 
-                session = jsch.getSession(mUser,mIP,mPort);
-                session.setPassword(mPassword);
+                URL url = new URL("http://" + mIP + ":" + mPort + "/scripts/CheckUser.sh");
 
-                // Avoid asking for key confirmation
-                Properties prop = new Properties();
-                prop.put("StrictHostKeyChecking", "no");
-                session.setConfig(prop);
+                String authString = mUser + ":" + mPassword;
+                final String authStringEnc = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
 
-                session.connect();
-                application.setSession(session);
-                Log.d("jsch", "logged in to server");
-                return true;
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("Authorization", "Basic " + authStringEnc);
+                conn.connect();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String str = in.readLine();
+                Log.d("output",str);
+                return str.equals("OK");
+
             } catch (Exception e){
-                Log.d("jsch","error" + e.getMessage());
+                Log.d("Login","error: " + e.getMessage());
                 return false;
             }
         }
