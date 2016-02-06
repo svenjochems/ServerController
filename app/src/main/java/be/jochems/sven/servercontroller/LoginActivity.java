@@ -297,7 +297,7 @@ public class LoginActivity extends Activity{
             try {
                 Log.d("Logging in", mUser + ", " + mIP + ", " + mPort);
 
-                URL url = new URL("http://" + mIP + ":" + mPort + "/scripts/CheckUser.sh");
+                URL url = new URL("http://" + mIP + ":" + mPort + "/script.php?checkLogin");
 
                 String authString = mUser + ":" + mPassword;
                 final String authStringEnc = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);

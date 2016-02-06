@@ -41,19 +41,19 @@
     </string-array>
     <string-array name="radioUrl">
         <item>MNM</item>
-        <item>MNMHits</item>
+        <item>MNM-Hits</item>
         <item>Nostalgie</item>
         <item>Radio1</item>
         <item>Radio2</item>
         <item>Sky</item>
-        <item>QMusic</item>
+        <item>Q-Music</item>
         <item>Joe</item>
-        <item>StuBru</item>
+        <item>Stubru</item>
         <item>Klara</item>
         <item>Valencia</item>
         <item>CD</item>
         <item>URL</item>
-        <item>PlayPause</item>
+        <item>playpause</item>
     </string-array>
 
     <string name="btnSolarOld">Oud</string>

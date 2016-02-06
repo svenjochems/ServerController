@@ -8,7 +8,7 @@ android {
         applicationId 'be.jochems.sven.servercontroller'
         minSdkVersion 16
         targetSdkVersion 20
-        versionName '1.3.1'
+        versionName '1.4.1'
     }
     buildTypes {
         release {

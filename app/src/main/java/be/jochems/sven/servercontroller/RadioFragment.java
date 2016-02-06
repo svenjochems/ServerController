@@ -104,7 +104,7 @@ public class RadioFragment extends Fragment {
             }
         });
 
-        new Play().execute("Print");
+        new Play().execute("current");
 
         return view;
     }
@@ -129,7 +129,7 @@ public class RadioFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                URL url = new URL("http://" + mIP + ":" + mPort + "/scripts/Radio.sh?param=" + params[0]);
+                URL url = new URL("http://" + mIP + ":" + mPort + "/script.php?radio=" + params[0]);
 
                 String authString = mUser + ":" + mPassword;
                 final String authStringEnc = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
